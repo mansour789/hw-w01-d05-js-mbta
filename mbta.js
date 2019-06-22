@@ -8,8 +8,29 @@ const stopsBetweenStations = function(startLine, startStation, endLine, endStati
            Green : ['Government Center', 'Park Street', 'Boylston', 'Arlington', 'Copley', 'Hynes', 'Kenmore'],
           Orange : ['North Station', 'Haymarket', 'Park Street', 'State', 'Downtown Crossing', 'Chinatown', 'Back Bay', 'Forest Hills'],     
       }
+            //This loop for writing all stations name
+      const loopFirstBigger = function(start, end, array, keyObject){
 
-        //if the line name is correct 
+        for (let i = start; i > end - 1; i--){
+            array.push(lines[keyObject][i]);   
+    };
+        for (let j = 1; j < array.length - 1; j++){
+        console.log(`Rider arrives at ${keyObject} Line and ${array[j]}.`);
+        };
+
+    };
+        //This loop for writing all stations name
+    const loopFirstSmaller = function(start, end, array, keyObject){
+
+        for (let i = start; i < end + 1; i++){
+            array.push(lines[keyObject][i]); 
+        };
+        for (let j = 1; j < array.length - 1; j++){
+        console.log(`Rider arrives at ${keyObject} Line and ${array[j]}.`);
+        };
+    };
+
+        //check the line name is correct 
     if ((startLine === 'Red' || startLine === 'Green' || startLine === 'Orange') && (endLine === 'Red' || endLine === 'Green' || endLine === 'Orange')){
              
         
@@ -24,100 +45,66 @@ const stopsBetweenStations = function(startLine, startStation, endLine, endStati
         let stationsBeforChange = [];
         let stationsAfterChange = [];
 
-
+            //check if the startStation name is corrct
         if (startPoint === -1 ){
             return ` ${startStation} is NOT on  ${startLine} Line. Please check your departing station!`;
         }
+            //check if the endStation name is corrct
         if (endingPoint === -1){
             return ` ${endStation} is NOT on  ${endLine} Line. Please check your arriving station!`;
         }
+            //check if the startStation and endStation are same
         if (startStation === endStation){
             return `Hey dude !! ${startStation} in ${startLine} Line is the same as ${endStation} in ${endLine} Line!!!.`;
         }
-        
 
+        
+        
+            //If the rider travils in the same line
         if (startLine === endLine){
-                //If the rider travils in the same line
-                console.log(`Rider boards the train a ${startLine} Line and ${startStation}.`)
+                console.log(`Rider boards the train a ${startLine} Line and ${startStation}.`);
                 if ( startPoint > endingPoint){
                     stops = startPoint - endingPoint;
-
-                    for (let k = startPoint; k > endingPoint - 1; k--){
-                         stations.push(lines[startLine][k]);   
-                    };
-                     for (let j = 1; j < stations.length - 1; j++){
-                     console.log(`Rider arrives at ${startLine} Line and ${stations[j]}.`)
-                     };
+                    loopFirstBigger(startPoint, endingPoint, stations, startLine);
                 }else{
-                    stops = endingPoint - startPoint;
-                    for (let i = startPoint; i < endingPoint + 1; i++){
-                        stations.push(lines[startLine][i]); 
-                    };
-                     for (let j = 1; j < stations.length - 1; j++){
-                    console.log(`Rider arrives at ${startLine} Line and ${stations[j]}.`)
-                     };
-                    
+                    stops = endingPoint - startPoint; 
+                    loopFirstSmaller(startPoint, endingPoint, stations, startLine);
                 };
                 console.log(`Rider exits the train at ${endLine} Line and ${endStation}.`);
      }else {
                     //If the rider travils in different lines
                     console.log(`Rider boards the train a ${startLine} Line and ${startStation}.`);
-                
+                    //count and write all the stations from start to Park Street
                 if ( startPoint > toParkStreet){
-                    // From the Stat to Park Street
                     stopsToChange = startPoint - toParkStreet;
-                    for (let k = startPoint; k > toParkStreet - 1; k--){
-                        stationsBeforChange.push(lines[startLine][k]);   
-                   };
-                    for (let j = 1; j < stationsBeforChange.length - 1; j++){
-                    console.log(`Rider arrives at ${startLine} Line and ${stationsBeforChange[j]}.`)
-                    };
-                    
+                loopFirstBigger(startPoint, toParkStreet, stationsBeforChange, startLine);  
                 }else{
                     stopsToChange = toParkStreet - startPoint;
-                    for (let i = startPoint; i < toParkStreet + 1; i++){
-                        stationsBeforChange.push(lines[startLine][i]); 
-                    };
-                     for (let j = 1; j < stationsBeforChange.length - 1; j++){
-                    console.log(`Rider arrives at ${startLine} Line and ${stationsBeforChange[j]}.`)
-                     };
-                    
+                    loopFirstSmaller(startPoint, toParkStreet, stationsBeforChange, startLine);   
                 }
-                console.log(`Rider transfers from ${startLine} Line to ${endLine} Line at Park Street.`)
+                console.log(`Rider transfers from ${startLine} Line to ${endLine} Line at Park Street.`);
                 
+                //count and write all the stations from Park Street to the end
                 if ( fromParkStreet > endingPoint){
-                    // From Park Street to the End
                     stopsAfterChange = fromParkStreet - endingPoint;
-
-                    for (let k = fromParkStreet; k > endingPoint - 1; k--){
-                        stationsAfterChange.push(lines[endLine][k]);   
-                   };
-                    for (let j = 1; j < stationsAfterChange.length - 1; j++){
-                    console.log(`Rider arrives at ${endLine} Line and ${stationsAfterChange[j]}.`)
-                    };
-                    
-
+                loopFirstBigger(fromParkStreet, endingPoint, stationsAfterChange, endLine);
                 }else{
                     stopsAfterChange = endingPoint - fromParkStreet;
-                    for (let i = fromParkStreet; i < endingPoint + 1; i++){
-                        stationsAfterChange.push(lines[endLine][i]); 
-                    };
-                     for (let j = 1; j < stationsAfterChange.length - 1; j++){
-                    console.log(`Rider arrives at ${endLine} Line and ${stationsAfterChange[j]}.`)
-                     };
-                    
+                    loopFirstSmaller(fromParkStreet, endingPoint, stationsAfterChange,endLine);
                 }
                 stops = stopsToChange + stopsAfterChange;
                 console.log(`Rider exits the train at ${endLine} Line and ${endStation}.`);
             }     
              
-         return `${stops}  stops From ${startStation}  To  ${endStation} `;
+          console.log(`${stops}  stops From ${startStation}  To  ${endStation} `);
            
     }else{ 
             //if the line name is NOT correct
-            return `${startLine} OR ${endLine} is NOT correct. Please check your input and try again!`
+            return `${startLine} OR ${endLine} is NOT correct. Please check your input and try again!`;
          }
 }
+
+
 
 
         //==========================RESULTS AFTER TESTING WITH BONUS==================================//
